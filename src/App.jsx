@@ -11,6 +11,8 @@ import School from './features/school/School';
 import Students from './features/students/Students';
 import StudentDetail from './features/students/StudentDetails';
 
+import StudentForm from './features/students/StudentForm';
+
 
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
         <Route path="/school" element={<School />} />
         <Route path="/classes" element={<Classes />} />
         <Route path="/students/:id" element={<StudentDetail />} />
+        <Route path="/add" element={<StudentForm />} />
       </Routes>
     </>
   )

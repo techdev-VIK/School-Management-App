@@ -1,6 +1,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchStudents } from "../students/studentsSlice";
+
+import { fetchStudents } from "./studentsSlice";
 
 import { useEffect } from "react";
 
@@ -23,7 +24,7 @@ export default function Students(){
         <main className="container mt-4">
             <h2>Student View</h2>
 
-            <button className="btn btn-warning">Add Student</button>
+            <Link to="/add"><button className="btn btn-warning">Add Student</button></Link>
 
             <div className="container mt-3">
             <h3>Student List</h3>
@@ -33,7 +34,7 @@ export default function Students(){
             {status === "error" && <p>{error}</p>}
             <ul>
             {status === "success" && students.map((stu, index) => (
-                <Link to={`/students/${stu._id}`}><li key={index}>
+                <Link to={`/students/${stu._id}`}><li key={stu._id}>
                     {stu.name}(Age: {stu.age})
                 </li></Link>
             ))}
