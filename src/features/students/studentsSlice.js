@@ -19,9 +19,6 @@ export const studentsSlice = createSlice({
         error: null,
     },
     reducers: {
-        addNewStudentPressed: (state, action) => {
-            
-        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchStudents.pending, (state) => {

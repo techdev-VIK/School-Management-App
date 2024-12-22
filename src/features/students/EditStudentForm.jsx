@@ -1,6 +1,8 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-export default function StudentForm(){
+export default function EditStudentForm(){
 
 
     const [name, setName] = useState('');
@@ -11,9 +13,27 @@ export default function StudentForm(){
 
     const [gender, setGender] = useState('');
 
+    const dispatch = useDispatch();
 
-    const formHandler = (e) =>{
+    const navigate = useNavigate();
+
+
+    const formHandler = async (e) =>{
         e.preventDefault();
+        
+        const newStudent = {
+            name,
+            age: parseInt(age),
+            grade,
+            gender
+        }
+
+
+        try {
+            const response = await axios.post("http://localhost:3000/students")
+        } catch (error) {
+            
+        }
 
 
     }
@@ -37,9 +57,9 @@ export default function StudentForm(){
             <br />
 
             <label>Gender:</label>
-            <label htmlFor="male"><input type="radio" name="gender" id="male" value={Male} onChange={(e) => setGender(e.target.value)}/>Male</label>
+            <label htmlFor="male"><input type="radio" name="gender" id="male" value="Male" onChange={(e) => setGender(e.target.value)}/>Male</label>
 
-            <label htmlFor="female"><input type="radio" name="gender" id="female" value={Female} onChange={(e) => setGender(e.target.value)}/>Female</label>
+            <label htmlFor="female"><input type="radio" name="gender" id="female" value="Female" onChange={(e) => setGender(e.target.value)}/>Female</label>
 
             <br />
 
