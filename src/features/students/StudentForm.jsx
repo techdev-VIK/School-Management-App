@@ -57,7 +57,7 @@ export default function StudentForm(){
             <input type="text" placeholder="Grade" onChange={(e) => setGrade(e.target.value)} value={grade} required className="form-control mb-3"/>
 
             
-        <div className="inout-group mb-3">
+        <div className="input-group mb-3">
             <label className="me-2">Gender:</label>
             <label htmlFor="male" className="me-2"><input type="radio" name="gender" id="male" value="Male" className="me-1" onChange={(e) => setGender(e.target.value)}/>Male</label>
 

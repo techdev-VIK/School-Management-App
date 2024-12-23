@@ -34,7 +34,7 @@ export default function Students(){
             {status === "error" && <p>{error}</p>}
             <ul>
             {status === "success" && students.map((stu, index) => (
-                <Link to={`/students/${stu._id}`}><li key={stu._id}>
+                <Link key={stu._id} to={`/students/${stu._id}`}><li >
                     {stu.name}(Age: {stu.age})
                 </li></Link>
             ))}
