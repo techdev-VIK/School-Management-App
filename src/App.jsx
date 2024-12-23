@@ -4,7 +4,7 @@ import {Routes, Route } from "react-router-dom";
 
 import Header from './components/Header';
 
-import Classes from "./pages/Classes";
+import Classes from './features/class/Classes';
 
 import School from './features/school/School';
 
@@ -27,6 +27,9 @@ function App() {
         <Route path="/classes" element={<Classes />} />
         <Route path="/students/:id" element={<StudentDetail />} />
         <Route path="/add" element={<StudentForm />} />
+
+        <Route path="/students/edit/:id" element={<StudentForm />} />
+
       </Routes>
     </>
   )
