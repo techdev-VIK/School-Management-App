@@ -10,7 +10,7 @@ export const fetchStudents = createAsyncThunk("students/fetchStudents", async() 
     return response.data;
 });
 
-export const addStudentsAsync = createAsyncThunk("students, addStudent", async(newStudent) => {
+export const addStudentsAsync = createAsyncThunk("students/addStudent", async(newStudent) => {
     const response = await axios.post("http://localhost:3000/students", newStudent)
 
 
@@ -19,13 +19,19 @@ export const addStudentsAsync = createAsyncThunk("students, addStudent", async(n
 
 
 
-export const updateStudentsAsync = createAsyncThunk("students, updateStudents", async(updatedStudent) => {
+export const updateStudentsAsync = createAsyncThunk("students/updateStudents", async(updatedStudent) => {
     const {_id, ...rest} = updatedStudent;
     const response = await axios.put(`http://localhost:3000/students/${_id}`, rest)
 
     return response.data;
 })
 
+
+export const deleteStudentAsync = createAsyncThunk("students/deleteStudent", async(id) => {
+    const response = await axios.delete(`http://localhost:3000/students/${id}`)
+
+    return id;
+})
 
 export const studentsSlice = createSlice({
     name: "students",
@@ -59,6 +65,10 @@ export const studentsSlice = createSlice({
         builder.addCase(addStudentsAsync.rejected, (state, action) => {
             state.status = 'Failed';
             state.error = action.error.message
+        })
+        builder.addCase(deleteStudentAsync.fulfilled, (state, action) => {
+            state.status = "success";
+            state.students = state.students.filter((student) => student._id !== action.payload);
         })
     }
 });

@@ -1,10 +1,16 @@
 
-import { useParams } from "react-router-dom"
-import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { deleteStudentAsync } from "./studentsSlice";
 
 export default function StudentDetail(){
 
+    const dispatch = useDispatch();
+
+    const navigate = useNavigate();
+
     const {students} = useSelector((state) => state.students);
+
 
 
     const {id} = useParams();
@@ -13,7 +19,14 @@ export default function StudentDetail(){
 
     const studentData = students?.find((stu) => stu._id === id)
 
-    // console.log(studentData);
+    console.log(studentData);
+
+
+    const handleDelete = () => {
+        dispatch(deleteStudentAsync(id));
+
+        navigate('/')
+    }
     
 
     return(
@@ -28,7 +41,7 @@ export default function StudentDetail(){
             
             <button className="btn btn-warning">Edit Details</button>
 
-            <button className="btn btn-danger ms-2">Delete</button></div>) : (<div className="alert alert-danger mt-4">Student Details not Found. Please try again!!!</div>)}
+            <button className="btn btn-danger ms-2" onClick={handleDelete}>Delete</button></div>) : (<div className="alert alert-danger mt-4">Student Details not Found. Please try again!!!</div>)}
         </main>
     )
 }
