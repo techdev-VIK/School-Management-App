@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchStudents = createAsyncThunk("students/fetchStudents", async() => {
-    const response = await axios.get("http://localhost:3000/students")
+    const response = await axios.get("https://school-management-rx-3-backend-fg31.vercel.app/students")
 
     // console.log(response.data);
 
@@ -11,7 +11,7 @@ export const fetchStudents = createAsyncThunk("students/fetchStudents", async() 
 });
 
 export const addStudentsAsync = createAsyncThunk("students/addStudent", async(newStudent) => {
-    const response = await axios.post("http://localhost:3000/students", newStudent)
+    const response = await axios.post("https://school-management-rx-3-backend-fg31.vercel.app/students", newStudent)
 
 
     return response.data;
@@ -21,14 +21,14 @@ export const addStudentsAsync = createAsyncThunk("students/addStudent", async(ne
 
 export const updateStudentsAsync = createAsyncThunk("students/updateStudents", async(updatedStudent) => {
     const {_id, ...rest} = updatedStudent;
-    const response = await axios.put(`http://localhost:3000/students/${_id}`, rest)
+    const response = await axios.put(`https://school-management-rx-3-backend-fg31.vercel.app/students/${_id}`, rest)
 
     return response.data;
 })
 
 
 export const deleteStudentAsync = createAsyncThunk("students/deleteStudent", async(id) => {
-    const response = await axios.delete(`http://localhost:3000/students/${id}`)
+    const response = await axios.delete(`https://school-management-rx-3-backend-fg31.vercel.app/students/${id}`)
 
     return id;
 })
