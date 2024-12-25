@@ -28,7 +28,7 @@ function App() {
         <Route path="/students/:id" element={<StudentDetail />} />
         <Route path="/add" element={<StudentForm />} />
 
-        <Route path="/students/edit/:id" element={<StudentForm />} />
+        <Route path="/editstudent/:id" element={<StudentForm />} />
 
       </Routes>
     </>

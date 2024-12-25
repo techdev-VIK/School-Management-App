@@ -11,21 +11,24 @@ export default function StudentDetail(){
 
     const {students} = useSelector((state) => state.students);
 
-
-
     const {id} = useParams();
 
     // console.log(id);
 
-    const studentData = students?.find((stu) => stu._id === id)
+    const studentData = students?.find((stu) => stu._id === id);
 
-    console.log(studentData);
+    // console.log(studentData);
 
 
     const handleDelete = () => {
         dispatch(deleteStudentAsync(id));
 
         navigate('/')
+    }
+
+    const handleEdit = () => {
+
+        navigate(`/editStudent/${studentData._id}`, {state: studentData})
     }
     
 
@@ -39,7 +42,7 @@ export default function StudentDetail(){
                 <p>Attendance: {studentData.attendance}</p>
                 <p>Marks: {studentData.marks}</p>
             
-            <button className="btn btn-warning">Edit Details</button>
+            <button className="btn btn-warning" onClick={handleEdit}>Edit Details</button>
 
             <button className="btn btn-danger ms-2" onClick={handleDelete}>Delete</button></div>) : (<div className="alert alert-danger mt-4">Student Details not Found. Please try again!!!</div>)}
         </main>

@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import axios from "axios";
+import { act } from "react";
+
+const backendUrl = "https://school-management-rx-3-backend-fg31.vercel.app"
 
 export const fetchStudents = createAsyncThunk("students/fetchStudents", async() => {
-    const response = await axios.get("https://school-management-rx-3-backend-fg31.vercel.app/students")
+    const response = await axios.get(`${backendUrl}/students`)
 
     // console.log(response.data);
 
@@ -11,24 +14,28 @@ export const fetchStudents = createAsyncThunk("students/fetchStudents", async() 
 });
 
 export const addStudentsAsync = createAsyncThunk("students/addStudent", async(newStudent) => {
-    const response = await axios.post("https://school-management-rx-3-backend-fg31.vercel.app/students", newStudent)
+    const response = await axios.post(`${backendUrl}/students`, newStudent)
 
 
     return response.data;
 })
 
 
-
-export const updateStudentsAsync = createAsyncThunk("students/updateStudents", async(updatedStudent) => {
-    const {_id, ...rest} = updatedStudent;
-    const response = await axios.put(`https://school-management-rx-3-backend-fg31.vercel.app/students/${_id}`, rest)
+export const updateStudentAsync = createAsyncThunk("students/updateStudent", async(updatedStudent) => {
+    const response = await axios.put(`${backendUrl}/students/${updatedStudent._id}`, updatedStudent);
 
     return response.data;
+});
+
+export const fetchStudentById = createAsyncThunk("students/fetchStudentById", async(id) => {
+    const resposne = await axios.get(`${backendUrl}/students/${id}`);
+
+    return resposne.data;
 })
 
 
 export const deleteStudentAsync = createAsyncThunk("students/deleteStudent", async(id) => {
-    const response = await axios.delete(`https://school-management-rx-3-backend-fg31.vercel.app/students/${id}`)
+    const response = await axios.delete(`${backendUrl}/students/${id}`)
 
     return id;
 })
@@ -37,6 +44,7 @@ export const studentsSlice = createSlice({
     name: "students",
     initialState:{
         students: [],
+        selectedStudent: null,
         status: "idle",
         error: null,
     },
@@ -69,6 +77,28 @@ export const studentsSlice = createSlice({
         builder.addCase(deleteStudentAsync.fulfilled, (state, action) => {
             state.status = "success";
             state.students = state.students.filter((student) => student._id !== action.payload);
+        })
+        builder.addCase(updateStudentAsync.pending, (state) => {
+            state.status = "loading"
+        });
+        builder.addCase(updateStudentAsync.fulfilled, (state, action) => {
+            state.status = "success";
+
+            const index = state.students.findIndex((stu) => stu._id === action.payload._id);
+
+            if(index !== -1){
+                state.students[index] = action.payload
+            }
+        })
+
+        builder.addCase(updateStudentAsync.rejected, (state, action) => {
+            state.status = "error";
+            state.error = action.error.message;
+        });
+
+        builder.addCase(fetchStudentById.fulfilled, (state, action) => {
+            state.status = "success";
+            state.selectedStudent = action.payload;
         })
     }
 });
