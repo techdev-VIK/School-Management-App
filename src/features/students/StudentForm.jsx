@@ -18,12 +18,8 @@ export default function StudentForm(){
 
     const {selectedStudent} = useSelector((state) => state.students);
 
-    console.log("Selected Student", selectedStudent)
-    
-
+ 
     const student = location.state||{};
-
-    console.log("Student - Location se:  ", student);
 
 
     const [name, setName] = useState(student.name || "");
@@ -61,10 +57,6 @@ export default function StudentForm(){
             }
            
     }, [selectedStudent])
-    
-    console.log("Selected Student dobara", selectedStudent)
-
-    console.log("Student - Location se dobara:  ", student);
 
 
     const formHandler = (e) =>{
@@ -93,10 +85,7 @@ export default function StudentForm(){
             navigate("/");
           }
         }
-
-        console.log("Selected Student dobara2", selectedStudent)
-
-    console.log("Student - Location se dobara2:  ", student);
+        
 
     return(
         <div className="container mt-3">
