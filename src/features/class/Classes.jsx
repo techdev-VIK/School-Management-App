@@ -1,84 +1,83 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilter, setSortBy } from "./classSlice";
+import { fetchStudents } from "../students/studentsSlice";
+
 
 export default function Classes() {
   const dispatch = useDispatch();
-  const { students, filter, sortBy } = useSelector((state) => state.students);
 
-  // Filter students based on gender
-  const filteredStudents = students.filter((student) => {
-    if (filter === "All") return true;
-    return student.gender === filter;
-  });
+  const {students} = useSelector((state) => state.students)
 
-  // Sort students based on selected sort criteria
-  const sortedStudents = filteredStudents.sort((a, b) => {
-    if (sortBy === "name") {
-      return a.name.localeCompare(b.name); // Sort alphabetically by name
-    } else if (sortBy === "marks") {
-      return b.marks - a.marks; // Sort by marks (descending order)
-    } else if (sortBy === "attendance") {
-      return b.attendance - a.attendance; // Sort by attendance (descending order)
+  const [filteredStudents, setFilteredStudents] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchStudents())
+  }, [dispatch])
+
+  useEffect(() => {
+    setFilteredStudents(students)
+  }, [students])
+  
+
+  console.log(students);
+
+
+  const genderFilterHandler = (e) => {
+
+        const {value} = e.target;
+
+        const filteredGender = value !== "All" ? students.filter((stu) => stu.gender === value) : students;
+
+        setFilteredStudents(filteredGender)
+  }
+
+  const sortingHandler = (e) => {
+    
+    const {value} = e.target;
+
+    const sortedStudents = [...filteredStudents];
+
+    if(value === "name"){
+        sortedStudents.sort((a,b) => a.name.localeCompare(b.name));
+    }else if(value === "marks"){
+        sortedStudents.sort((a,b) => a.marks - b.marks);
+    }else if(value === "attendance"){
+        sortedStudents.sort((a,b) => a.attendance - b.attendance);
+    }else{
+        sortedStudents.sort((a,b) => a.age - b.age);
     }
-    return 0;
-  });
 
-  // Handle filter change
-  const handleFilterChange = (event) => {
-    dispatch(setFilter(event.target.value));
-  };
+    setFilteredStudents(sortedStudents);
+  }
 
-  // Handle sort change
-  const handleSortChange = (event) => {
-    dispatch(setSortBy(event.target.value));
-  };
-
-  return (
-    <div className="container mt-5">
-      <h1>Class View</h1>
-      {/* Filter Dropdown */}
-      <div className="my-3">
-        <label htmlFor="filter">Filter by Gender:</label>
-        <select
-          id="filter"
-          value={filter}
-          onChange={handleFilterChange}
-          className="ms-2"
-        >
-          <option value="All">All</option>
-          <option value="Boy">Boys</option>
-          <option value="Girl">Girls</option>
+  return(
+    <div className="container my-4 ">
+        <h1 className="mb-3">Class View</h1>
+        
+        <label>Filter By Gender:</label>
+        <select onChange={genderFilterHandler} className="form-select w-50 mb-4">
+            <option value="All">All</option>
+            <option value="Male">Boys</option>
+            <option value="Female">Girls</option>
         </select>
-      </div>
 
-      {/* Sort Dropdown */}
-      <div className="my-3">
-        <label htmlFor="sortBy">Sort by:</label>
-        <select
-          id="sortBy"
-          value={sortBy}
-          onChange={handleSortChange}
-          className="ms-2"
-        >
-          <option value="name">Name</option>
-          <option value="marks">Marks</option>
-          <option value="attendance">Attendance</option>
+
+        <label>Sort By:</label>
+        <select onChange={sortingHandler} className="form-select w-50 mb-4">
+            <option value="">-- Select --</option>
+            <option value="name">Name</option>
+            <option value="marks">Marks</option>
+            <option value="attendance">Attendance</option>
         </select>
-      </div>
 
-      {/* Students List */}
-      <ul className="list-group">
-        {sortedStudents.map((student, index) => (
-          <li key={index} className="list-group-item">
-            <p>Name: {student.name}</p>
-            <p>Gender: {student.gender}</p>
-            <p>Marks: {student.marks}</p>
-            <p>Attendance: {student.attendance}</p>
-          </li>
-        ))}
-      </ul>
+
+        <ul>
+            {filteredStudents && filteredStudents.map((stu) => (
+                <li key={stu._id}>{stu.name} - {stu.gender} - Marks: {stu.marks} - Attendance: {stu.attendance}</li>
+            ))}
+        </ul>
+
     </div>
-  );
+  )
 }
