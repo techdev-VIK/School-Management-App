@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import axios from "axios";
-import { act } from "react";
 
 const backendUrl = "https://school-management-rx-3-backend-fg31.vercel.app"
 
@@ -27,12 +26,6 @@ export const updateStudentAsync = createAsyncThunk("students/updateStudent", asy
     return response.data;
 });
 
-export const fetchStudentById = createAsyncThunk("students/fetchStudentById", async(id) => {
-    const resposne = await axios.get(`${backendUrl}/students/${id}`);
-
-    return resposne.data;
-})
-
 
 export const deleteStudentAsync = createAsyncThunk("students/deleteStudent", async(id) => {
     const response = await axios.delete(`${backendUrl}/students/${id}`)
@@ -48,6 +41,9 @@ export const studentsSlice = createSlice({
         error: null,
     },
     reducers: {
+        resetStatus: (state) => {
+            state.status = "idle";
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchStudents.pending, (state) => {
@@ -70,19 +66,22 @@ export const studentsSlice = createSlice({
 
         });
         builder.addCase(addStudentsAsync.rejected, (state, action) => {
-            state.status = 'Failed';
+            state.status = 'error';
             state.error = action.error.message
-        })
+        });
         builder.addCase(deleteStudentAsync.fulfilled, (state, action) => {
             state.status = "success";
             state.students = state.students.filter((student) => student._id !== action.payload);
-        })
+        });
+        builder.addCase(deleteStudentAsync.rejected, (state, action) => {
+            state.status = "error";
+            state.error = action.error.message;
+        });
         builder.addCase(updateStudentAsync.pending, (state) => {
             state.status = "loading"
         });
         builder.addCase(updateStudentAsync.fulfilled, (state, action) => {
             state.status = "success";
-
             const index = state.students.findIndex((stu) => stu._id === action.payload._id);
 
             if(index !== -1){
@@ -97,5 +96,6 @@ export const studentsSlice = createSlice({
     }
 });
 
+export const {resetStatus} = studentsSlice.actions;
 
 export default studentsSlice.reducer

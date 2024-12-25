@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { addStudentsAsync, updateStudentAsync, fetchStudentById } from "./studentsSlice";
+import { addStudentsAsync, updateStudentAsync } from "./studentsSlice";
 
 export default function StudentForm(){
 
 
+
     const {id} = useParams();
+
+    const {status, error} = useSelector((state) => state.students)
 
     const location = useLocation();
 
@@ -41,21 +44,34 @@ export default function StudentForm(){
           };
 
 
-          if(id){
-            dispatch(updateStudentAsync(newStudent));
+          
+            if(id){
+                dispatch(updateStudentAsync(newStudent));
 
-            navigate(`/students/${id}`);
-          }else{
-            dispatch(addStudentsAsync(newStudent));
+                setTimeout(() => {
+                    navigate(`/students/${id}`);
+                }, 3000);
+              
 
-            navigate("/");
+              }else{
+                dispatch(addStudentsAsync(newStudent));
+                
+                setTimeout(() => {
+                    navigate("/");
+                }, 3000);
+
+              }
           }
-        }
+          
 
 
     return(
         <div className="container mt-3">
             <h1>{id ? "Edit Student" : "Add Student"}</h1>
+
+            {status === "loading" && <div className="alert alert-warning">Loading...</div>}
+            {status === "error" && <div className="alert alert-danger">{error}</div>}
+
 
             <form onSubmit={formHandler} className="mt-3">
             <input type="text" placeholder="Name" maxLength={30} onChange={(e) => setName(e.target.value)}  value={name} required className="form-control mb-3"/>
@@ -116,6 +132,7 @@ export default function StudentForm(){
             </button>
 
             </form>
+            
         </div>
     )
 }

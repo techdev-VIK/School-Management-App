@@ -1,7 +1,8 @@
 
 import { useNavigate, useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux";
-import { deleteStudentAsync } from "./studentsSlice";
+import { fetchStudents, deleteStudentAsync } from "./studentsSlice";
+import { useEffect } from "react";
 
 export default function StudentDetail(){
 
@@ -9,7 +10,14 @@ export default function StudentDetail(){
 
     const navigate = useNavigate();
 
-    const {students} = useSelector((state) => state.students);
+    const {students, status, error} = useSelector((state) => state.students);
+
+    useEffect(() => {
+        if(!students || students.length === 0){
+            dispatch(fetchStudents())
+            
+        }
+    }, [dispatch, students])
 
     const {id} = useParams();
 
@@ -21,9 +29,15 @@ export default function StudentDetail(){
 
 
     const handleDelete = () => {
-        dispatch(deleteStudentAsync(id));
 
+        const confirmDelete = window.confirm("Are you sure you want to delete this student?");
+
+        if(confirmDelete)
+            {
+        dispatch(deleteStudentAsync(id));
+        
         navigate('/')
+      }        
     }
 
     const handleEdit = () => {
@@ -35,6 +49,11 @@ export default function StudentDetail(){
     return(
         <main className="container mt-5">
             <h2>Student Details</h2>
+
+            {status === "loading" && <div className="alert alert-warning">Loading...</div>}
+            {status === "error" && <div className="alert alert-danger">{error}</div>}
+
+
             {studentData ? (<div className="mt-3">
                 <p>Name: {studentData.name}</p>
                 <p>Age: {studentData.age}</p>
@@ -44,7 +63,7 @@ export default function StudentDetail(){
             
             <button className="btn btn-warning" onClick={handleEdit}>Edit Details</button>
 
-            <button className="btn btn-danger ms-2" onClick={handleDelete}>Delete</button></div>) : (<div className="alert alert-danger mt-4">Student Details not Found. Please try again!!!</div>)}
+            <button className="btn btn-danger ms-2" onClick={handleDelete}>Delete</button></div>): (<div className="alert alert-success mt-4">Record Deleted Successfully!!! Redirecting to Previous Page in 3 Seconds...</div>)}
         </main>
     )
 }

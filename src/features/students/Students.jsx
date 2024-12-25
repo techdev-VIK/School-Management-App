@@ -30,8 +30,8 @@ export default function Students(){
             <h3>Student List</h3>
         
         
-            {status === "loading" && <p>Loading...</p>}
-            {status === "error" && <p>{error}</p>}
+            {status === "loading" && <div className="alert alert-warning">Loading...</div>}
+            {status === "error" && <div className="alert alert-danger">{error}</div>}
             <ul>
             {status === "success" && students.map((stu, index) => (
                 <Link key={stu._id} to={`/students/${stu._id}`}><li >
