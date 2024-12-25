@@ -44,7 +44,6 @@ export const studentsSlice = createSlice({
     name: "students",
     initialState:{
         students: [],
-        selectedStudent: null,
         status: "idle",
         error: null,
     },
@@ -95,11 +94,6 @@ export const studentsSlice = createSlice({
             state.status = "error";
             state.error = action.error.message;
         });
-
-        builder.addCase(fetchStudentById.fulfilled, (state, action) => {
-            state.status = "success";
-            state.selectedStudent = action.payload;
-        })
     }
 });
 
